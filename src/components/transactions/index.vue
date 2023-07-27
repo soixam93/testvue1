@@ -33,11 +33,11 @@
                 </p>
                 <p>
                     <strong> Sender Address : </strong>
-                    {{ responseClean.senderAddres }}
+                    {{ responseClean.senderAddress }}
                 </p>
                 <p>
                     <strong> Reciever Address : </strong>
-                    {{ responseClean.recieverAddres }}
+                    {{ responseClean.receiverAddress }}
                 </p>
                 <p>
                     <strong> Amount : </strong>
@@ -75,8 +75,8 @@ export default {
             responseClean: {
                 trxStatus: null,
                 trxHash: null,
-                senderAddres: null,
-                recieverAddres: null,
+                senderAddress: null,
+                receiverAddress: null,
                 trxAmount: null,
                 trxGasPrice: null,
                 requestStatus: null,
@@ -107,6 +107,11 @@ export default {
                 } else {
                     getInfo(params)
                         .then((res) => {
+                            console.log("xx", res);
+                            if (res.data.data === undefined) {
+                                this.responseClean.requestStatus = false;
+                                return;
+                            }
                             const data = res.data;
                             this.responseData = data;
                             this.responseClean.trxStatus =
@@ -114,8 +119,9 @@ export default {
                                     ? "Confirmed"
                                     : "Unconfirmed";
                             this.responseClean.trxHash = data.hash;
-                            this.responseClean.senderAddres = data.ownerAddress;
-                            this.responseClean.recieverAddres = data.toAddress;
+                            this.responseClean.senderAddress =
+                                data.ownerAddress;
+                            this.responseClean.receiverAddress = data.toAddress;
                             this.responseClean.trxAmount = `${
                                 data.contractData.amount / 1000000
                             } TRX`;
